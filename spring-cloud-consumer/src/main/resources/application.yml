@@ -1,0 +1,59 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true
+# 执行器相关配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  server:
+    port: 8081
+    servlet:
+      context-path: /
+    ssl:
+      enabled: false
+  endpoint:
+    health:
+      show-details: always
+feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    enabled: true
+ribbon:
+  eager-load:
+    enabled: true
+    clients: producer
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 50000
+  threadpool:
+    default:
+      coreSize: 100 ##并发执行的最大线程数，默认10
+      maxQueueSize: 100 ##BlockingQueue的最大队列数
+      queueSizeRejectionThreshold: 50 ##即使maxQueueSize没有达到，达到queueSizeRejectionThreshold该值后，请求也会被拒绝
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          strategy: THREAD
+          thread:
+            timeoutInMilliseconds: 50000
+
+producer:
+  ribbon:
+    OkToRetryOnAllOperations: true
+    ConnectTimeout: 20000
+    ReadTimeout: 20000
+    MaxAutoRetriesNextServer: 1
+    MaxAutoRetries: 2
